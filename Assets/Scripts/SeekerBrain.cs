@@ -27,36 +27,39 @@ public class SeekerBrain : MonoBehaviour
 
     private void FixedUpdate()
     {
+        direction = Player.position - this.transform.position;
+        distance = Vector3.SqrMagnitude(direction);
+            direction.y = transform.position.y;
        
-            direction = Player.position - this.transform.position;
-            distance = Vector3.SqrMagnitude(direction);
-            if (distance < SqrRangeDistance)
+
+
+        if (distance < SqrRangeDistance)
+        {
+            if (Vector3.Angle(direction, transform.forward) < rangeAngle)
             {
-                if (Vector3.Angle(direction, transform.forward) < rangeAngle)
+                if (Physics.Raycast(transform.position, direction, rangeDistance, layer))
                 {
-
-                    //if (Physics.Raycast(transform.position, direction, rangeDistance, layer))
-                    //{// need to use actual distance so that it only detect the blockers between the npc and player
-                    //    Debug.DrawRay(transform.position, direction * rangeDistance, Color.yellow);
-                    //    anim.SetBool("cansee", false);
-
-                    //}
-                    //else
-                    //{
-                    //    Debug.DrawRay(transform.position, direction * rangeDistance, Color.white);
-                    //    anim.SetBool("cansee", true);
-                    //}
-                    isInRange = true;
+                    Debug.DrawRay(transform.position, direction, Color.yellow);
+                    isInRange = false;
                 }
                 else
-                    isInRange = false;
+                {
+                    Debug.DrawRay(transform.position, direction, Color.white);
+                isInRange = true;
+                }
+
+                Debug.Log("inRange");
             }
             else
                 isInRange = false;
+        }
+        else
+            isInRange = false;
 
-        
+
         anim.SetBool("cansee", isInRange);
 
     }
+   
 
 }
